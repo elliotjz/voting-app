@@ -1,0 +1,16 @@
+
+extends nav
+
+block append scripts
+	script(src="js/twitter.js")
+
+
+block buttons
+	button(type="button").btn.btn-primary.navbar-btn#sign-in-with-twitter Sign in with Twitter
+
+block page
+	div.container
+		h1 Voting App
+		p Cast your votes here
+		p= message
+

@@ -1,0 +1,15 @@
+doctype
+html
+	head
+		title EZ Vote
+		link(rel='stylesheet', type='text/css', href='css/bootstrap.min.css')
+		link(rel='stylesheet', type='text/css', href='css/main.css')
+		block scripts
+			script(src="https://code.jquery.com/jquery-2.1.4.min.js")
+	body
+		div.my-container
+			nav.navbar.navbar-inverse
+				div.container-fluid
+					a(href="#").navbar-brand EZ Vote
+					block buttons
+			block page
