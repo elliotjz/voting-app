@@ -36,6 +36,7 @@ module.exports = function(app) {
 			else {
 				twitter.verifyCredentials(accessToken, accessSecret, function(err, user) {
 					if (err) res.status(500).send(err);
+					console.log(user);
 					else res.send(user);
 				});
 			}
@@ -43,16 +44,7 @@ module.exports = function(app) {
 	})
 
 	app.get('/twitterlogin', function(req, res) {
-
-		let options = {
-			host: 'https://ez-vote.herokuapp.com',
-			path: '/access-token' + location.search
-		}
-		let signInReq = http.get(options, function(signInRes) {
-			console.log('STATUS: ' + signInRes.statusCode);
-  			console.log('HEADERS: ' + JSON.stringify(signInRes));
-		})
-		res.render('index');
+		res.render('signed-in');
 	});
 
 	app.get('/sign-in-fail', function(req, res) {
