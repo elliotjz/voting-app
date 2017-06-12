@@ -1,5 +1,6 @@
 
 body {
+	font-family: 'Roboto', sans-serif;
 }
 
 .navbar {
@@ -12,6 +13,10 @@ body {
 
 .navbar-brand {
 	margin: 10px auto;
+}
+
+.nav-link {
+	margin: 8px;
 }
 
 .container {
@@ -34,4 +39,5 @@ body {
 	width: 200px;
 	height: 250px;
 	border: solid #555 1px;
+	margin: 10px;
 }

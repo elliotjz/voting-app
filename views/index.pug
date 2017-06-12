@@ -1,17 +1,15 @@
 
-extends template
-
-block append scripts
-	script(src="js/twitter-sign-in-btn.js")
-
-
-block buttons
-	button(type="button").btn.btn-primary.navbar-btn#sign-in-with-twitter Sign in with Twitter
+extends layout
 
 block head-bar
 	h1 EZ Voting App
-	p Create your own polls, vote, browse results
+	if user.name
+		h4 Welcome #{user.name}
+	else
+		h4 To create a poll, 
+			a(href="/signin") Sign In With Twitter
+		h4 Or Browse and vote on existing polls
 
 block page
-	p Existing polls will go here
+	h4 Select a poll to vote and see the results
 	include poll.pug

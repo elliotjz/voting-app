@@ -1,0 +1,21 @@
+doctype
+html
+	head
+		title EZ Vote
+		link(rel='stylesheet', type='text/css', href='css/bootstrap.min.css')
+		link(rel='stylesheet', type='text/css', href='css/main.css')
+		link(href="https://fonts.googleapis.com/css?family=Roboto", rel="stylesheet")
+	body
+		nav.navbar.navbar-inverse
+			div.container-fluid
+				a(href="/").navbar-brand EZ Vote
+				if user.name
+					a(href="/signout").nav-link Sign Out
+					a(href="/my-polls").nav-link My Polls
+					a(href="/new-poll").nav-link New Poll
+				else
+					a(href="/signin").nav-link Sign In With Twitter
+		div.container.head-bar
+			block head-bar
+		div.container.page
+			block page

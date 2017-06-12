@@ -12,3 +12,4 @@ secret.txt
 Dockerfile
 docker-compose.yml
 
+env.js

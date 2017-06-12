@@ -1,68 +1,77 @@
-'use strict';
+var bodyParser = require('body-parser');
 
-let Twitter = require('node-twitter-api');
+let urlencodedParser = bodyParser.urlencoded({extended: false});
 
-module.exports = function(app) {
+module.exports = function(app, passport) {
 
-	let twitter = new Twitter({
-		consumerKey: process.env.CONSUMER_KEY,
-		consumerSecret: process.env.CONSUMER_SECRET,
-		callback: process.env.CALLBACK_URL
-	});
+    app.get("/", function(req, res){
+        let user = {};
+        if (req.user) {
+            user.name = req.user.displayName;
+            user.id = req.user._json.id_str;
+        }
+        res.render("index", { user: user });
+    });
 
-	let _requestSecret;
+    app.get('/my-polls', function(req, res) {
+        let user = {};
+        if (req.user) {
+            user.name = req.user.displayName;
+            user.id = req.user._json.id_str;
+            res.render('my-polls', { user: user });
+        } else {
+            res.redirect('/');
+        }
+    })
 
-	app.get('/', function(req, res) {
-		res.render('index', {message: "Hi Voting app"});
-	});
+    app.get('/new-poll', function(req, res) {
+        let user = {};
+        if (req.user) {
+            user.name = req.user.displayName;
+            user.id = req.user._json.id_str;
+            res.render('new-poll', { user: user });
+        } else {
+            res.redirect('/');
+        }
+    })
 
-	app.get('/request-token', function(req, res) {
-		twitter.getRequestToken(function(err, requestToken, requestSecret) {
-			if (err) res.status(500).send(err);
-			else {
-				_requestSecret = requestSecret;
-				res.redirect("https://api.twitter.com/oauth/authenticate?oauth_token=" + requestToken);
-			}
-		})
-	})
+    app.post('/poll-submit', urlencodedParser, function(req, res) {
+        console.log("post");
+        let title = req.body.title;
+        let options = req.body.options.split(',');
+        options.forEach(function(option, index) {
+            options[index] = option.trim();
+        })
+        /*
+        Save to MONGO!
+        */
+        res.redirect('/my-polls');
+    })
 
-	app.get('/access-token', function(req, res) {
-		let requestToken = req.query.oauth_token
-		let verifier = req.query.oauth_verifier;
+    var twitterAuthenticator = passport.authenticate("twitter");
+    app.get("/signin", function(req, res){
+        twitterAuthenticator(req, res);
+    });
 
-		twitter.getAccessToken(requestToken, _requestSecret, verifier, function(err, accessToken, accessSecret) {
-			if (err) res.status(500).send(err);
-			else {
-				twitter.verifyCredentials(accessToken, accessSecret, function(err, user) {
-					if (err) res.status(500).send(err);
-					else {
-						localStorage.setItem('ez-vote-logged-in', 'true')
-						localStorage.setItem('twitter-id', user.id_str)
-						console.log(user);
-						res.send(user);
-					}
-				});
-			}
-		});
-	})
+    app.get("/signout", function(req, res){
+        var username;
+        if(req.user) username = req.user.username;
+        else username = "user";
+        req.session.destroy();
+        res.locals.user = null
+        res.render("signout", { user: {} });
+    });
 
-	app.get('/twitter-callback', function(req, res) {
-		if (localStorage.getItem('ez-vote-logged-in') === 'true') {
-			res.render('signed-in');
-		} else {
-			res.render('sign-in-fail');
-		}
-		
-	});
-
-	app.get('/sign-in-fail', function(req, res) {
-		res.render('sign-in-fail');
-	});
-
-	app.use(function(req, res, next) {
-	    res.status(400);
-	    res.end('404: File Not Found');
-	});
+    var authenticateNewUser = passport.authenticate("twitter", { failureRedirect: "/signout" });
+    app.get("/auth/twitter/callback",
+        function(req, res, next){
+            authenticateNewUser(req, res, next);
+        },
+        function(req, res){
+            // SAVE THESE TO MONGO!!!
+            //console.log(req.user.displayName);
+            //console.log(req.user._json.id_str);
+            /////
+            res.redirect("/");
+        });
 }
-
-

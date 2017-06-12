@@ -1,18 +1,14 @@
 
-extends template
-
-block append scripts
-	button(type="button").btn.btn-default.navbar-btn#sign-out Sign out
-	button(type="button").btn.btn-success.navbar-btn#new-poll Create New Poll
-
-
-block buttons
-	button(type="button").btn.btn-default.navbar-btn#sign-out Sign out
-	button(type="button").btn.btn-success.navbar-btn#new-poll Create New Poll
+extends layout
 
 block head-bar
-	h1 Create a new poll
+	h1 New Poll
 
 block page
-	p poll creation will happen here
+	form(action="/poll-submit", method="post").new-poll-form
+		h4 Title:
+		input(type="text", name="title", placeholder="Poll Title")
+		h4 Options (Seperated with commas):
+		input(type="text", name="options", placeholder="Toyota, Ford, Audi")
+		button(type="submit") Submit
 
