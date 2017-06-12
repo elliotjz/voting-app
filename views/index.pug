@@ -2,14 +2,24 @@
 extends layout
 
 block head-bar
-	h1 EZ Voting App
 	if user.name
 		h4 Welcome #{user.name}
+		h4
+			a(href="/my-polls").logged-in-link My Polls
+			a(href="/new-poll").logged-in-link New Poll
 	else
 		h4 To create a poll, 
 			a(href="/signin") Sign In With Twitter
-		h4 Or Browse and vote on existing polls
+			|.
+		h4 Or Browse through existing polls and vote!
 
 block page
-	h4 Select a poll to vote and see the results
-	include poll.pug
+	div.container
+		div.row
+			include poll.pug
+			include poll.pug
+			include poll.pug
+			include poll.pug
+			include poll.pug
+			include poll.pug
+			include poll.pug

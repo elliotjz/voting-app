@@ -6,17 +6,12 @@ body {
 .navbar {
 	border-radius: 0;
 	border: 0px;
-	height: 70px;
-	line-height: 70px;
 	margin: 0;
+	line-height: 50px;
 }
 
-.navbar-brand {
-	margin: 10px auto;
-}
-
-.nav-link {
-	margin: 8px;
+.pull-right {
+	margin-right: 5px !important;
 }
 
 .container {
@@ -26,18 +21,48 @@ body {
 }
 
 .head-bar {
-	min-height: 70px;
-	background: #2a5070;
-	color: #fff;
+	background: #d7dde2;
+	padding: 30px;
 }
 
-.page {
-	
+.logged-in-link {
+	padding: 0 10px;
 }
 
 .poll {
 	width: 200px;
 	height: 250px;
-	border: solid #555 1px;
-	margin: 10px;
+	margin: 15px auto;
+	background-color: #eee;
+	box-shadow: 0 0 5px #999;
 }
+
+.poll:hover {
+	box-shadow: 0 0 5px #444;
+	cursor: pointer;
+}
+
+form {
+	text-align: left;
+	background-color: #eee;
+	max-width: 700px;
+	margin: 15px auto;
+	padding: 10px;
+	box-shadow: 0 0 5px #999;
+}
+
+label {
+	font-size: 16px;
+}
+
+form button {
+	margin-top: 8px;
+}
+/*
+form button {
+	margin-top: 5px;
+}
+
+input {
+	width: 100%;
+}*/

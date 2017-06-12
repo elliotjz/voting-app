@@ -5,10 +5,12 @@ block head-bar
 	h1 New Poll
 
 block page
-	form(action="/poll-submit", method="post").new-poll-form
-		h4 Title:
-		input(type="text", name="title", placeholder="Poll Title")
-		h4 Options (Seperated with commas):
-		input(type="text", name="options", placeholder="Toyota, Ford, Audi")
+	form(action="/poll-submit", method="post").form-group
+		label Title:
+		input(type="text", name="title", placeholder="Poll Title").form-control
+		label Options:
+		textarea(rows="3", name="options", placeholder="Toyota, Ford, Audi").form-control
+		small Seperated with commas
+		br
 		button(type="submit") Submit
 
