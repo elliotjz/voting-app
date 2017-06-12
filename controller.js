@@ -45,7 +45,7 @@ module.exports = function(app) {
 		});
 	})
 
-	app.get('/twitterlogin', function(req, res) {
+	app.get('/auth/twitter/callback', function(req, res) {
 		res.render('signed-in');
 	});
 
