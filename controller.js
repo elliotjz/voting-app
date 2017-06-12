@@ -36,8 +36,10 @@ module.exports = function(app) {
 			else {
 				twitter.verifyCredentials(accessToken, accessSecret, function(err, user) {
 					if (err) res.status(500).send(err);
-					console.log(user);
-					else res.send(user);
+					else {
+						console.log(user);
+						res.send(user);
+					}
 				});
 			}
 		});
