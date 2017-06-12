@@ -7,9 +7,11 @@ html
 		block scripts
 			script(src="https://code.jquery.com/jquery-2.1.4.min.js")
 	body
-		div.my-container
-			nav.navbar.navbar-inverse
-				div.container-fluid
-					a(href="#").navbar-brand EZ Vote
-					block buttons
+		nav.navbar.navbar-inverse
+			div.container-fluid
+				a(href="#").navbar-brand EZ Vote
+				block buttons
+		div.container.head-bar
+			block head-bar
+		div.container.page
 			block page

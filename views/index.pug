@@ -1,17 +1,16 @@
 
-extends nav
+extends template
 
 block append scripts
-	script(src="js/twitter.js")
+	script(src="js/twitter-sign-in-btn.js")
 
 
 block buttons
 	button(type="button").btn.btn-primary.navbar-btn#sign-in-with-twitter Sign in with Twitter
 
-block page
-	div.container
-		h1 Voting App
-		p Cast your votes here
-		p= message
-		p#url
+block head-bar
+	h1 EZ Voting App
+	p Create your own polls, vote, browse results
 
+block page
+	p Existing polls will go here

@@ -46,7 +46,7 @@ module.exports = function(app) {
 	});
 
 	app.get('/sign-in-fail', function(req, res) {
-		res.render('sign-in-fail')
+		res.render('sign-in-fail');
 	});
 
 	app.use(function(req, res, next) {

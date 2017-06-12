@@ -1,13 +1,5 @@
 
 body {
-	background-color: #222;
-}
-
-.my-container {
-	background-color: #fff;
-	max-width: 1000px;
-	margin: auto;
-	min-height: 100vh;
 }
 
 .navbar {
@@ -15,8 +7,25 @@ body {
 	border: 0px;
 	height: 70px;
 	line-height: 70px;
+	margin: 0;
 }
 
 .navbar-brand {
 	margin: 10px auto;
+}
+
+.container {
+	margin: 0;
+	text-align: center;
+	width: 100vw;
+}
+
+.head-bar {
+	min-height: 70px;
+	background: #2a5070;
+	color: #fff;
+}
+
+.page {
+	
 }

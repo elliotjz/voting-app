@@ -1,15 +1,16 @@
 
-extends nav
+extends template
 
 block append scripts
-	script(src="js/twitter.js")
+	script(src="js/twitter-sign-in-btn.js")
 
 
 block buttons
 	button(type="button").btn.btn-primary.navbar-btn#sign-in-with-twitter Sign in with Twitter
 
-block page
-	div.container
-		h1 Sign in Failed
-		p Try again
+block head-bar
+	h1 Sign in Failed
+	p Try again
 
+block page
+	p Existing polls will go here
