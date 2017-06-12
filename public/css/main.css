@@ -29,3 +29,9 @@ body {
 .page {
 	
 }
+
+.poll {
+	width: 200px;
+	height: 250px;
+	border: solid #555 1px;
+}

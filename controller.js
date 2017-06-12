@@ -1,6 +1,7 @@
 'use strict';
 
 let Twitter = require('node-twitter-api');
+let http = require('http');
 
 module.exports = function(app) {
 
@@ -42,7 +43,16 @@ module.exports = function(app) {
 	})
 
 	app.get('/twitterlogin', function(req, res) {
-		res.render('signed-in');
+
+		let options = {
+			host: 'https://ez-vote.herokuapp.com',
+			path: '/access-token' + location.search
+		}
+		let signInReq = http.get(options, function(signInRes) {
+			console.log('STATUS: ' + signInRes.statusCode);
+  			console.log('HEADERS: ' + JSON.stringify(signInRes));
+		})
+		res.render('index');
 	});
 
 	app.get('/sign-in-fail', function(req, res) {
