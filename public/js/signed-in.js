@@ -13,7 +13,4 @@ $(function() {
 			window.location.href = "https://ez-vote.herokuapp.com/sign-in-fail";
 		}
 	});
-
-	
-
 });

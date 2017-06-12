@@ -1,7 +1,6 @@
 'use strict';
 
 let Twitter = require('node-twitter-api');
-let http = require('http');
 
 module.exports = function(app) {
 
@@ -45,7 +44,7 @@ module.exports = function(app) {
 		});
 	})
 
-	app.get('/auth/twitter/callback', function(req, res) {
+	app.get('/twitter-callback', function(req, res) {
 		res.render('signed-in');
 	});
 
