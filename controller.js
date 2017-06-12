@@ -36,6 +36,8 @@ module.exports = function(app) {
 				twitter.verifyCredentials(accessToken, accessSecret, function(err, user) {
 					if (err) res.status(500).send(err);
 					else {
+						localStorage.setItem('ez-vote-logged-in', 'true')
+						localStorage.setItem('twitter-id', user.id_str)
 						console.log(user);
 						res.send(user);
 					}
@@ -45,7 +47,12 @@ module.exports = function(app) {
 	})
 
 	app.get('/twitter-callback', function(req, res) {
-		res.render('signed-in');
+		if (localStorage.getItem('ez-vote-logged-in') === 'true') {
+			res.render('signed-in');
+		} else {
+			res.render('sign-in-fail');
+		}
+		
 	});
 
 	app.get('/sign-in-fail', function(req, res) {
