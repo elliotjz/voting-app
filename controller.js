@@ -43,7 +43,11 @@ module.exports = function(app) {
 
 	app.get('/twitterlogin', function(req, res) {
 		res.render('signed-in');
-	})
+	});
+
+	app.get('/sign-in-fail', function(req, res) {
+		res.render('sign-in-fail')
+	});
 
 	app.use(function(req, res, next) {
 	    res.status(400);
