@@ -1,6 +1,28 @@
-var bodyParser = require('body-parser');
+let bodyParser = require('body-parser');
+let mongoose = require('mongoose');
+let env = require('./env');
+var makePollId = require('./public/js/makePollId');
 
 let urlencodedParser = bodyParser.urlencoded({extended: false});
+
+// Connect to database
+mongoose.connect(env.mlab_url);
+
+// Create schema
+let userSchema = new mongoose.Schema({
+    id: String,
+    name: String,
+})
+
+let pollSchema = new mongoose.Schema({
+    id: String,
+    owner: String,
+    title: String,
+    votes: Object
+})
+
+let UserModel = mongoose.model('users', userSchema);
+let PollModel = mongoose.model('polls', pollSchema);
 
 module.exports = function(app, passport) {
 
@@ -28,7 +50,6 @@ module.exports = function(app, passport) {
         let user = {};
         if (req.user) {
             user.name = req.user.displayName;
-            user.id = req.user._json.id_str;
             res.render('new-poll', { user: user });
         } else {
             res.redirect('/');
@@ -37,18 +58,27 @@ module.exports = function(app, passport) {
 
     app.post('/poll-submit', urlencodedParser, function(req, res) {
         console.log("post");
-        let title = req.body.title;
         let options = req.body.options.split(',');
-        options.forEach(function(option, index) {
-            options[index] = option.trim();
+        let optionsObj = {}
+        options.forEach(function(option) {
+            optionsObj[option.trim()] = 0;
         })
-        /*
-        Save to MONGO!
-        */
+        newPoll = {
+            id: makePollId(),
+            owner: req.user._json.id_str,
+            title: req.body.title,
+            votes: optionsObj
+        }
+        //Save to DB
+        let newPollDoc = PollModel(newPoll).save(function(err, data) {
+            if (err) throw err;
+        })
+
         res.redirect('/my-polls');
     })
 
     var twitterAuthenticator = passport.authenticate("twitter");
+
     app.get("/signin", function(req, res){
         twitterAuthenticator(req, res);
     });
@@ -63,15 +93,24 @@ module.exports = function(app, passport) {
     });
 
     var authenticateNewUser = passport.authenticate("twitter", { failureRedirect: "/signout" });
+
     app.get("/auth/twitter/callback",
         function(req, res, next){
             authenticateNewUser(req, res, next);
         },
         function(req, res){
-            // SAVE THESE TO MONGO!!!
-            //console.log(req.user.displayName);
-            //console.log(req.user._json.id_str);
-            /////
-            res.redirect("/");
+            newUser = {
+                id: req.user._json.id_str,
+                name: req.user.displayName,
+            }
+            UserModel.findOne({ id: newUser.id }, function(err, data) {
+                if (err) throw err;
+                if (!data) {
+                    let newUserDoc = UserModel(newUser).save(function(err, data) {
+                        if (err) throw err;
+                    })
+                }
+                res.redirect('/');
+            })
         });
 }
