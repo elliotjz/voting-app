@@ -6,9 +6,10 @@ html
 		link(rel='stylesheet', type='text/css', href='css/main.css')
 		link(href="https://fonts.googleapis.com/css?family=Roboto", rel="stylesheet")
 		script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js")
+		script(type="text/javascript").
+			let polls=!{JSON.stringify(polls)};
 		script(src="js/pieChart.js")
-
-	body(onload="displayChart();")
+	body
 		nav.navbar.navbar-inverse.navbar-static-top
 			div.container-fluid
 				div.navbar-header.pull-left
@@ -34,8 +35,6 @@ html
 		div.container.head-bar
 			block head-bar
 		div.container.page
-			div.chart-container
-				canvas#myChart
 			block page
 		script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js")
 		script(src="js/bootstrap.min.js")

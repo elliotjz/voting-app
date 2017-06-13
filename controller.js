@@ -27,12 +27,19 @@ let PollModel = mongoose.model('polls', pollSchema);
 module.exports = function(app, passport) {
 
     app.get("/", function(req, res){
-        let user = {};
-        if (req.user) {
-            user.name = req.user.displayName;
-            user.id = req.user._json.id_str;
-        }
-        res.render("index", { user: user });
+        var polls = [];
+        PollModel.find({}, function(err, polls) {
+            if (err) throw err;
+            let user = {};
+            if (req.user) {
+                user.name = req.user.displayName;
+                user.id = req.user._json.id_str;
+            }
+            res.render("index", {
+                user: user,
+                polls: polls
+            });
+        });
     });
 
     app.get('/my-polls', function(req, res) {
@@ -57,7 +64,6 @@ module.exports = function(app, passport) {
     })
 
     app.post('/poll-submit', urlencodedParser, function(req, res) {
-        console.log("post");
         let options = req.body.options.split(',');
         let optionsObj = {}
         options.forEach(function(option) {

@@ -4,12 +4,12 @@ User Collection:
 {
 	id: <twitter id>
 	name: <name>
-	polls: [<Poll ID 1>, <Poll ID 2>, <Poll Id 3> ... ]
 }
 
 Poll Collection:
 {
 	id: <Poll ID>
+	owner: <twitter id of owner>
 	title: <Poll Title>
 	votes: {
 		option1: <count>
