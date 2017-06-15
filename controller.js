@@ -5,29 +5,25 @@ var makePollId = require('./public/js/makePollId');
 
 let urlencodedParser = bodyParser.urlencoded({extended: false});
 
-// Connect to database
+// Set up database
 mongoose.connect(env.mlab_url);
-
-// Create schema
 let userSchema = new mongoose.Schema({
     id: String,
     name: String,
 })
-
 let pollSchema = new mongoose.Schema({
     id: String,
     owner: String,
     title: String,
     votes: Object
 })
-
 let UserModel = mongoose.model('users', userSchema);
 let PollModel = mongoose.model('polls', pollSchema);
+
 
 module.exports = function(app, passport) {
 
     app.get("/", function(req, res){
-        var polls = [];
         PollModel.find({}, function(err, polls) {
             if (err) throw err;
             let user = {};
@@ -43,21 +39,42 @@ module.exports = function(app, passport) {
     });
 
     app.get('/my-polls', function(req, res) {
-        let user = {};
-        if (req.user) {
+        if (!req.user) {
+            res.redirect('/');
+        } else {
+            let user = {};
             user.name = req.user.displayName;
             user.id = req.user._json.id_str;
-            res.render('my-polls', { user: user });
-        } else {
-            res.redirect('/');
+            PollModel.find({owner: user.id}, function(err, polls) {
+                if (err) throw err;
+                res.render('my-polls', {
+                    user: user,
+                    polls: polls
+                });
+            });
         }
     })
 
-    app.get('/new-poll', function(req, res) {
+    app.get('/poll', function(req, res) {
         let user = {};
+        if (req.user) user.name = req.user.displayName;
+        PollModel.find({ id: req.query.id }, function(err, poll) {
+            if (err) throw err;
+            if (poll) {
+                res.render('poll', { user: user, polls: poll });
+            } else {
+                res.redirect('/');
+            }
+        });
+    })
+
+    app.get('/new-poll', function(req, res) {
         if (req.user) {
+            let user = {};
             user.name = req.user.displayName;
-            res.render('new-poll', { user: user });
+            res.render('new-poll', {
+                user: user
+            });
         } else {
             res.redirect('/');
         }
@@ -67,7 +84,9 @@ module.exports = function(app, passport) {
         let options = req.body.options.split(',');
         let optionsObj = {}
         options.forEach(function(option) {
-            optionsObj[option.trim()] = 0;
+            if (option.trim() !== '') {
+                optionsObj[option.trim()] = 0;
+            }
         })
         newPoll = {
             id: makePollId(),
@@ -76,11 +95,34 @@ module.exports = function(app, passport) {
             votes: optionsObj
         }
         //Save to DB
-        let newPollDoc = PollModel(newPoll).save(function(err, data) {
+        PollModel(newPoll).save(function(err, data) {
             if (err) throw err;
+            res.redirect('/my-polls');
         })
+    })
 
-        res.redirect('/my-polls');
+    app.post('/vote-submit', urlencodedParser, function(req, res) {
+        let chosenOption = req.body.vote;
+        let newVotes;
+        console.log(req.body);
+        PollModel.find({ id: req.body.pollId }, function(err, poll) {
+            if (err) throw err;
+            newVotes = poll[0].votes;
+            console.log(newVotes);
+            if (chosenOption !== 'I have a better option...') {
+                newVotes[chosenOption] += 1;
+                console.log(newVotes);
+            } else {
+                newVotes[req.body.newOption] = 1
+                console.log(newVotes);
+            }
+            PollModel.update({ id: req.body.pollId }, {
+                $set: { votes: newVotes }
+                }, function(err, data) {
+                if (err) throw err;
+                res.redirect('/poll?id=' + req.body.pollId);
+            })
+        })
     })
 
     var twitterAuthenticator = passport.authenticate("twitter");
@@ -90,21 +132,22 @@ module.exports = function(app, passport) {
     });
 
     app.get("/signout", function(req, res){
-        var username;
-        if(req.user) username = req.user.username;
-        else username = "user";
-        req.session.destroy();
-        res.locals.user = null
-        res.render("signout", { user: {} });
+        PollModel.find({}, function(err, polls) {
+            if (err) throw err;
+            var username;
+            if(req.user) username = req.user.username;
+            else username = "user";
+            req.session.destroy();
+            res.locals.user = null;
+            res.render("signout", { user: {}, polls: polls });
+        })
     });
 
     var authenticateNewUser = passport.authenticate("twitter", { failureRedirect: "/signout" });
 
-    app.get("/auth/twitter/callback",
-        function(req, res, next){
+    app.get("/auth/twitter/callback", function(req, res, next){
             authenticateNewUser(req, res, next);
-        },
-        function(req, res){
+        }, function(req, res){
             newUser = {
                 id: req.user._json.id_str,
                 name: req.user.displayName,
@@ -120,3 +163,4 @@ module.exports = function(app, passport) {
             })
         });
 }
+

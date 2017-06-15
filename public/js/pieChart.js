@@ -5,7 +5,6 @@ window.onload = function(req, res) {
 }
 
 function displayAllCharts(polls) {
-    console.log(polls);
     polls.forEach(function(poll) {
         displayChart(poll);
     });

@@ -11,9 +11,9 @@ app.set("view engine", "pug");
 
 app.use(express.static('./public'));
 
+// Grab ID from cookies
 var cookieParserFunction = cookieParser();
 app.use(function(req, res, next){
-    //"* Getting the session ID from cookies...");
     cookieParserFunction(req, res, next);
 });
 
@@ -22,8 +22,8 @@ var sessionFunction = session({
     resave: true,
     saveUninitialized: true
 });
+
 app.use(function(req, res, next){
-    //"* The session ID is " + req.cookies["connect.sid"] + ". 'Hashing' it...")
     sessionFunction(req, res, next);
 });
 
@@ -38,9 +38,6 @@ app.use(function(req, res, next){
 });
 
 app.use(function(req, res, next){
-    if(req.user){
-    }else{
-    }
     res.locals.user = req.user;
     next();
 });

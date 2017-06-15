@@ -1,4 +1,28 @@
 
-div.col-xs-6.col-sm-4.col-md-3.col-lg-3
-	div.poll
-		h4 Poll name
+extends layout
+
+block scripts
+	script(src='js/vote.js')
+
+block head-bar
+	h4 Poll: #{polls[0].title}
+
+block page
+	div.container
+		div.row
+			div.col-xs-12.col-sm-6
+				div.big-chart-container
+					canvas(id=polls[0].id)
+			div.col-xs-12.col-sm-6
+				form(action="/vote-submit", method="post").form-group
+					label My vote goes to:
+					br
+					select(name='vote' onchange="newOptionCheck(this);").form-control
+						option(selected disabled hidden) Choose one...
+						each optn in Object.keys(polls[0].votes)
+							option(value=optn) #{optn}
+						option(value="I have a better option...") I have a better option
+					div(style="display: none")#newOptionText
+						input(type="text", name="newOption", placeholder="New Option").form-control
+					input(type="text", name="pollId", value=polls[0].id, style="display: none")
+					button(type="submit") Submit
