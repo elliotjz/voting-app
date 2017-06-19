@@ -29,12 +29,17 @@ body {
 	padding: 0 10px;
 }
 
-.chart-container {
+.chart-outer-container {
 	width: 200px;
 	height: 250px;
 	margin: 15px auto;
 	background-color: #eee;
 	box-shadow: 0 0 5px #999;
+}
+
+.chart-inner-container {
+	width: 200px;
+	height: 250px;
 }
 
 .chart-container:hover {

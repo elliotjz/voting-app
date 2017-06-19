@@ -26,3 +26,10 @@ block page
 						input(type="text", name="newOption", placeholder="New Option").form-control
 					input(type="text", name="pollId", value=polls[0].id, style="display: none")
 					button(type="submit") Submit
+			div.col-xs-12.col-sm-6
+				- let isOwner = user.id === polls[0].owner;
+				- console.log("isOwner: " + isOwner);
+				- console.log("user.id: " + user.id);
+				- console.log("owner: " + polls[0].owner);
+				if isOwner
+					btn(type='button').btn.btn-danger Delete Poll
