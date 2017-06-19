@@ -14,10 +14,5 @@ block head-bar
 		h4 Or Browse through existing polls and vote!
 
 block page
-	div.container
-		div.row
-			each poll in polls
-				div.col-xs-12.col-sm-6.col-md-4.col-lg-3
-					div.chart-container
-						h4 #{poll.title}
-						canvas(id=poll.id)
+	include all-polls.pug
+	
