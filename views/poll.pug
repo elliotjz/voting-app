@@ -21,15 +21,15 @@ block page
 						option(selected disabled hidden) Choose one...
 						each optn in Object.keys(polls[0].votes)
 							option(value=optn) #{optn}
-						option(value="I have a better option...") I have a better option
+						if user.name
+							option(value="I have a better option...") I have a better option
 					div(style="display: none")#newOptionText
 						input(type="text", name="newOption", placeholder="New Option").form-control
 					input(type="text", name="pollId", value=polls[0].id, style="display: none")
 					button(type="submit") Submit
 			div.col-xs-12.col-sm-6
 				- let isOwner = user.id === polls[0].owner;
-				- console.log("isOwner: " + isOwner);
-				- console.log("user.id: " + user.id);
-				- console.log("owner: " + polls[0].owner);
 				if isOwner
-					btn(type='button').btn.btn-danger Delete Poll
+					- let url = '/delete-poll?id=' + polls[0].id;
+					form(action=url, method='post').delete-btn-form
+						input(type='submit', value='Delete Poll').btn.btn-danger

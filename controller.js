@@ -15,7 +15,8 @@ let pollSchema = new mongoose.Schema({
     id: String,
     owner: String,
     title: String,
-    votes: Object
+    votes: Object,
+    votees: Array
 })
 let UserModel = mongoose.model('users', userSchema);
 let PollModel = mongoose.model('polls', pollSchema);
@@ -57,7 +58,10 @@ module.exports = function(app, passport) {
 
     app.get('/poll', function(req, res) {
         let user = {};
-        if (req.user) user.name = req.user.displayName;
+        if (req.user) {
+            user.name = req.user.displayName;
+            user.id = req.user._json.id_str;
+        }
         PollModel.find({ id: req.query.id }, function(err, poll) {
             if (err) throw err;
             if (poll) {
@@ -92,7 +96,8 @@ module.exports = function(app, passport) {
             id: makePollId(),
             owner: req.user._json.id_str,
             title: req.body.title,
-            votes: optionsObj
+            votes: optionsObj,
+            votees: []
         }
         //Save to DB
         PollModel(newPoll).save(function(err, data) {
@@ -103,26 +108,37 @@ module.exports = function(app, passport) {
 
     app.post('/vote-submit', urlencodedParser, function(req, res) {
         let chosenOption = req.body.vote;
+        let ipAddress = req.headers['x-forwarded-for'];
         let newVotes;
-        console.log(req.body);
         PollModel.find({ id: req.body.pollId }, function(err, poll) {
             if (err) throw err;
             newVotes = poll[0].votes;
-            console.log(newVotes);
+            newVotees = poll[0].votees;
+            if (newVotees.includes(ipAddress)) {
+                alert("You can only vote once!");
+                res.redirect('/poll?id=' + req.body.pollId);
+            }
             if (chosenOption !== 'I have a better option...') {
                 newVotes[chosenOption] += 1;
-                console.log(newVotes);
             } else {
                 newVotes[req.body.newOption] = 1
-                console.log(newVotes);
             }
+            newVotees.push(ipAddress);
             PollModel.update({ id: req.body.pollId }, {
-                $set: { votes: newVotes }
+                $set: { votes: newVotes, votees: newVotees }
                 }, function(err, data) {
                 if (err) throw err;
                 res.redirect('/poll?id=' + req.body.pollId);
             })
         })
+    })
+
+    app.post('/delete-poll', function(req, res) {
+        let pollId = req.query.id;
+        PollModel.remove({ id: pollId }, function(err, poll) {
+            if (err) throw err;
+        })
+        res.redirect('/my-polls');
     })
 
     var twitterAuthenticator = passport.authenticate("twitter");

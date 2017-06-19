@@ -53,11 +53,18 @@ body {
 	margin: 15px auto;
 }
 
+.delete-btn-form {
+	background: #fff;
+	border: none;
+	text-align: center;
+	box-shadow: none;
+}
+
 form {
 	text-align: left;
 	background-color: #eee;
 	max-width: 700px;
-	margin: 15px auto;
+	margin: 15px 15px;
 	padding: 10px;
 	box-shadow: 0 0 5px #999;
 }

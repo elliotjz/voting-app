@@ -17,4 +17,5 @@ Poll Collection:
 		option3: <count>
 		...
 	}
+	votees: <list of ip addresses>
 }
