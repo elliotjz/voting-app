@@ -6,3 +6,7 @@ function newOptionCheck(selection) {
         document.getElementById("newOptionText").style.display = "none";
     }
 }
+
+document.getElementById("vote-form").submit(function(data) {
+	window.location.href = "/vote-submit";
+});

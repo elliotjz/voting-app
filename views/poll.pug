@@ -14,6 +14,8 @@ block page
 				div.big-chart-container
 					canvas(id=polls[0].id)
 			div.col-xs-12.col-sm-6
+				if message
+					p.error-message Your vote was not submitted. You can only vote once.
 				form(action="/vote-submit", method="post").form-group
 					label My vote goes to:
 					br

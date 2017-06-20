@@ -57,6 +57,7 @@ module.exports = function(app, passport) {
     })
 
     app.get('/poll', function(req, res) {
+        let message = req.query.message;
         let user = {};
         if (req.user) {
             user.name = req.user.displayName;
@@ -65,7 +66,7 @@ module.exports = function(app, passport) {
         PollModel.find({ id: req.query.id }, function(err, poll) {
             if (err) throw err;
             if (poll) {
-                res.render('poll', { user: user, polls: poll });
+                res.render('poll', { user: user, polls: poll, message: message });
             } else {
                 res.redirect('/');
             }
@@ -108,28 +109,33 @@ module.exports = function(app, passport) {
 
     app.post('/vote-submit', urlencodedParser, function(req, res) {
         let chosenOption = req.body.vote;
-        let ipAddress = req.headers['x-forwarded-for'];
         let newVotes;
         PollModel.find({ id: req.body.pollId }, function(err, poll) {
             if (err) throw err;
             newVotes = poll[0].votes;
             newVotees = poll[0].votees;
-            if (newVotees.includes(ipAddress)) {
-                alert("You can only vote once!");
-                res.redirect('/poll?id=' + req.body.pollId);
-            }
+
             if (chosenOption !== 'I have a better option...') {
                 newVotes[chosenOption] += 1;
             } else {
                 newVotes[req.body.newOption] = 1
             }
-            newVotees.push(ipAddress);
-            PollModel.update({ id: req.body.pollId }, {
-                $set: { votes: newVotes, votees: newVotees }
-                }, function(err, data) {
-                if (err) throw err;
-                res.redirect('/poll?id=' + req.body.pollId);
-            })
+            let ipAddress = req.connection.remoteAddress;
+            let alreadyVoted = false;
+            for (let i = 0; i < newVotees.length; i++ ) {
+                if (newVotees[i] === ipAddress) alreadyVoted = true;
+            }
+            if (alreadyVoted) {
+                res.redirect('/poll?id=' + req.body.pollId + "&message=1");
+            } else {
+                newVotees.push(ipAddress);
+                PollModel.update({ id: req.body.pollId }, {
+                    $set: { votes: newVotes, votees: newVotees }
+                    }, function(err, data) {
+                    if (err) throw err;
+                    res.redirect('/poll?id=' + req.body.pollId);
+                })
+            }
         })
     })
 
