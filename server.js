@@ -4,7 +4,6 @@ var cookieParser = require("cookie-parser");
 var session = require("express-session");
 var passport = require("passport");
 var Strategy = require("passport-twitter").Strategy;
-var env = require("./env");
 var controller = require('./controller');
 
 app.set("view engine", "pug");
@@ -18,7 +17,7 @@ app.use(function(req, res, next){
 });
 
 var sessionFunction = session({
-    secret: env.sessionSecret,
+    secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true
 });
@@ -50,8 +49,15 @@ passport.deserializeUser(function(user, next) {
     next(null, user);
 });
 
+let twitterObj = {
+    consumerKey: process.env.CONSUMER_KEY,
+    consumerSecret: process.env.CONSUMER_SECRET,
+    callbackURL: process.env.CALLBACK_URL
+  },
+}
+
 var twitterStrategy = new Strategy(
-    env.twitter,
+    twitterObj,
     function(token, tokenSecret, profile, next){
         next(null, profile);
     }

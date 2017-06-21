@@ -21,7 +21,7 @@ body {
 }
 
 .head-bar {
-	background: #d7dde2;
+	background: #e6ffe5;
 	padding: 30px;
 }
 
@@ -29,17 +29,26 @@ body {
 	padding: 0 10px;
 }
 
+.form-group {
+	margin: 10px auto;
+}
+
+.form-group label {
+	margin: 4px;
+}
+
 .chart-outer-container {
-	width: 200px;
-	height: 250px;
+	width: 250px;
+	height: 310px	;
 	margin: 15px auto;
 	background-color: #eee;
 	box-shadow: 0 0 5px #999;
 }
 
 .chart-inner-container {
-	width: 200px;
-	height: 250px;
+	width: 250px;
+	height: 310px;
+	padding-top: 2px;
 }
 
 .chart-container:hover {
@@ -51,6 +60,14 @@ body {
 	max-width: 400px;
 	max-height: 500px;
 	margin: 15px auto;
+}
+
+.error-message {
+	border: 1px solid #ff6363;
+	border-radius: 3px;
+	background: #ffdbdb;
+	color: #ff6363;
+	margin: 10px 15px;
 }
 
 .delete-btn-form {
