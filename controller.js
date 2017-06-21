@@ -1,12 +1,11 @@
 let bodyParser = require('body-parser');
 let mongoose = require('mongoose');
-let env = require('./env');
 var makePollId = require('./public/js/makePollId');
 
 let urlencodedParser = bodyParser.urlencoded({extended: false});
 
 // Set up database
-mongoose.connect(env.mlab_url);
+mongoose.connect(process.env.MLAB_URL);
 let userSchema = new mongoose.Schema({
     id: String,
     name: String,
