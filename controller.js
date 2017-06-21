@@ -119,7 +119,7 @@ module.exports = function(app, passport) {
             } else {
                 newVotes[req.body.newOption] = 1
             }
-            let ipAddress = req.connection.remoteAddress;
+            let ipAddress = req.headers['x-forwarded-for'];
             let alreadyVoted = false;
             for (let i = 0; i < newVotees.length; i++ ) {
                 if (newVotees[i] === ipAddress) alreadyVoted = true;
