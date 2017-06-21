@@ -66,6 +66,8 @@ passport.use(twitterStrategy);
 // Set up Routes
 controller(app, passport);
 
-app.listen(3000, function(){
-    console.log("Server running at http://127.0.0.1:3000");
+const port = process.env.PORT || 3000;
+
+app.listen(port, function(){
+    console.log("Server running on port " + port);
 });
